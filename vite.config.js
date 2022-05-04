@@ -26,7 +26,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://hk4e-api.mihoyo.com',
+        target: 'https://hk4e-api.mihoyo.com', //http://47.103.202.249:30429
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

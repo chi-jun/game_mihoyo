@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-const webstaticUrl = ref('')
+
+import {mihoyo_info, mihoyo_uid_info} from '../api/urls'
+const webstaticUrl = ref('https://webstatic.mihoyo.com/hk4e/event/e20190909gacha/index.html?authkey_ver=1&sign_type=2&auth_appid=webview_gacha&init_type=301&gacha_id=eaa07ae07196ca35c36b48213560ab6df7617e&timestamp=1648597985&lang=zh-cn&device_type=mobile&ext=%7b%22loc%22%3a%7b%22x%22%3a2238.020263671875%2c%22y%22%3a212.88307189941407%2c%22z%22%3a-913.114990234375%7d%2c%22platform%22%3a%22Android%22%7d&game_version=CNRELAndroid2.6.0_R6708157_S6988297_D6731353&plat_type=android&region=cn_gf01&authkey=6kjU4RgV10PA9T184K0Y2s23S4c93kPUzNlfUAigAmBHU0UvHLerW%2bopI3N%2bqm4IjmucZhCe%2fmY0Ij1DYYjg1%2b%2bMztHOQ6dxasL6Wa9AZhVdSu6ylxbxLQYtTa%2ftSldra3RVWT43nbvQWNoTOarZb9Oi%2f7iwONH94NZmuL8XLQEh0RCgpoK2D%2fUQ9wJ3Xl%2b1gibTq6u0ZLN2vJ895G2gTMYb9MyzuTM%2bnTvEe7XE80o3M9gWM1V2Fey9ud02tKoSm7DJB5VAmC2Iq22C8SLcq6X8nV4BKid4iZ3reer0%2bMJMHUyseNn5x4piNsA0oAN%2fOicphO8nMigS2QKPEOWc4hF%2fc5JiGzpx0UzmMmBtXIWwv0tasF61%2blwskXWEnxyd64w8kA3CWiYttJW4%2b%2f8nJhmShkyq3IOAe9US8fh%2fJUO1dSBFvKBBlqfQQuwhXQr1ytIioFLIhag9Q4VwPJ9Px0XfbFQRRnTBfQF2Y1AQcHWMfB%2fgnPjIfyixDItJgILSdyMJOLzfuYKsMv9mdsZB9FFR7u5JX%2bZam8yrJRAclvckhAF0zQevMru6XnWLqeiBke2rOk4iI71dSiNjsPPAgTST07%2fEWJ%2fQBrN0giIiCeAa8SDxl4GVzaKD96DTurj9lhL38rO647vJl%2bJwpQmfFwDDYzX%2bFvMTXTU49tBZL8ATq5Q%2fqPy6Ijn31BE8ivSnfZCevvoetyMtFjLgmfyb23bSgEs9Csqx9cqWr0i%2fc658yqACN0qKPNSVGNRW901SpQNvxPh0sY2y42jCr9qfCM2QnkEna0CdxtLhD%2fPChVKKB6rZN6lyKLjXTaHPAaG71u7Zk4pB4MS%2bXsjIG5wLL17h%2bYophyb%2buQf6L11jcaxpmdaB0Oqiw%2bPjCpUINXteFoxRXURH95zz2WcB2BVaxOIHHzkQQRsiC0Fq9Na6zC%2fgy3sSc%2bPvnpxF5Ps%2bTzukbAUPIOCL9Oo0iyKhASmWFcm1lJasFQlvQBdmTk9KeQUj69CPy%2b2m4mpFTn%2bU%2fGfhyhR8c2siCzvftazDgE09bFIDUpQxs54RPC%2blpJ3RyDV4vmUEmbjAReO4oaN9tQ2IfdIXumiW8%2f8Ma17Jb2VSKue2cYm57vqV9vxWJD5DhTB7utrHRQXv9pm4CsGX6c6SxK32eCz4vJWxqSE1bFFHKkaGdmh9d2ak2sZxjHyboOqpdoxyqp5O%2fYLfVdDeGtjM6Q1c7O3xxnByG7d67StRVOtCaU7B55Q8xuSITe1MvQ4Gy9AB%2fPkuJsjo2BZ7egnAzwQlz2OEUDVLXV6%2fcEDULsSNVVPhhDPqx3RGNVi4hdJJMlm%2bDyTfTEY20MH5PyBJz7u8B1NQNT2lgN977Fw%2fUw%3d%3d&game_biz=hk4e_cn#/log')
 
 const num = ref(0)
 
@@ -22,13 +24,26 @@ const weapon_list = [
   {name: '狼末', idx: 67}
 ]
 
+// 查询复制链接所得到的数据
+const selectList = () => {
+  if (webstaticUrl) {
+    axios.post('/api/genshin_impact/save_gacha_info', {data: webstaticUrl.value}).then(res => {
+      console.log(res)
+    })
+  }
+}
+
 const getList = (eid) => {
   // num.value += 1
   // if (num.value < 5) {
   //   getList()
   // }
   // gache_type    200常驻   301up   302武器
-  let url = '/api/event/gacha_info/api/getGachaLog?authkey_ver=1&sign_type=2&auth_appid=webview_gacha&init_type=400&gacha_id=eaa07ae07196ca35c36b48213560ab6df7617e&timestamp=1643447186&lang=zh-cn&device_type=mobile&ext=%7b%22loc%22%3a%7b%22x%22%3a-660.648193359375%2c%22y%22%3a224.5959014892578%2c%22z%22%3a201.34742736816407%7d%2c%22platform%22%3a%22Android%22%7d&game_version=CNRELAndroid2.6.0_R6708157_S6988297_D6731353&plat_type=android&region=cn_gf01&authkey=o1mm1hMcT049LWps%2fryUnM%2fow6xs3MswOiFyjAGiUSOTlCm4%2bHMfW6Qv5u7zXIw2X0BeVGpW43JNb4Z%2b7bvKiIwoGKYj5HysOYo%2bSSWKcZVBZBhk50UFimCb8C8UA3adBIRhL0jix8TU5yv3ZOBCNcvPP9bP0Am5cApxmiF5Szo8zSL%2bOoql1QAQ6twGkFd4C2SEQ714KHpBJOEjmY4a5PYoKoKsq7QC62Um7KbVmM8oPdD96KO%2fapVyl0XppRxpB8FBn%2f%2f9DxEFQ1kBDMRq3TwTaBppHFiqwsynLf4NghLYoUEYg1gvPRpQnbyRbdNjP3lVRb5h4dYgIL5B0uUtwTwjshF5U2uCM4%2bNCK1zj7pRxi8idUNky0gzSVvTpOdAksQkTHCixLkhIyJgH1xNUOgb7MiiTddcLtOcofmG7woqH%2bm%2f34tXuZKRrRVWK9m8EMa2erW2%2feT4ZKQoehFseshD49Tq2Bj6t2CVirl9AOeT6WwNiH9VBaicWdwskfbZTvBiopTEVyguiaL9Rx%2fPZls2zmSUlswStCSfj5S6YSxtRfaghdvzcmxYkujK6MkDJIOurLPL0p6J6EyQE3RuFeZ1KCZOnZ%2fVGJNXj7sTRGzd4GSYRrmhOrmvnmMFGyF5OVdLt%2bxq8Cz%2fuwW0Gbd01%2baLkJ6gQmjaXVJFL%2fOH3%2f%2bXOK4do7JNpgqH0na10RrBftzvE%2blXtfyV20Fy%2f4VW%2fxmkO3zseWjXgvtfyrT2Da452BHnXVeE1zegoEjTRmfELTBvZTaACCu2MqwzSoEL7WFBC5Ndw4doPvivXDKFEQvRRgC0gtdvghKidb4kZwdrth%2fn98xttqn2jS5%2bRiH6KowuveiM%2biCNIf714ZzUI%2fpmX%2b3EBLxwoQfE6cgXB8Q9sJ03Pjm4JSWhzx2X0I39PbEhEXFyaPiNKgEZkld7HXAFPDdQrI%2fPYFXpV0qy%2buL0Q8Y%2bxJCyTqGgVp7NcGMuML6E7EjRq8Mu0HcuZav2NSfcs%2fBCZJvgkulgKJ4TAbsxSgBas3Pvd2REIxFLrS5QXNL6VDFSzA58Mr9%2b5cHmW67UxFVhCFHOKGdaQ5L9BKFnIY%2bWxbFSiPH7RtyJq%2fmVw3uc9WiaDRpV8iH9MAN%2fVztR7d3Do6jvDhPCm%2b%2bzFCc26phmgAKMXTQB0%2ff%2fmY6DA7aSpycYu7UF0yAPMIAI2xNDm87Hvw8uNiSLbQLGEY388eQJ3q6d1onxb0fpcBsIjeLChBbnUsSuLfFhTi0BwzMUU5QsciUvsASUd3LxOkKblQ8HEQUwBvCXJVSide926csGXh3c2xjWhEZef5la7R748T0NRbCC2j4DOQVUrJtfrfTyUpg5hasAv4jBbl1xsw%3d%3d&game_biz=hk4e_cn&gacha_type=301&page=2&size=2000&end_id='
+  let _url = webstaticUrl.value.substr(webstaticUrl.value.indexOf('?') + 1)
+
+  _url = _url.replace('#/log', '')
+
+  let url = '/api/event/gacha_info/api/getGachaLog?' + _url + '&gacha_type=302&page=1&size=20&end_id='
   if (eid) {
     url = url + eid
   }
@@ -41,7 +56,10 @@ const getList = (eid) => {
     console.log(_list)
 
     if (Number(res.data.retcode) == 0) {
-      getList(_list.list[_list.list.length - 1].id)
+      setTimeout(function() {
+        getList(_list.list[_list.list.length - 1].id)
+      }, 1100)
+      
     }
 
   })
